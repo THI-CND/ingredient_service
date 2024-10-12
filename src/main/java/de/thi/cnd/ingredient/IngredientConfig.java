@@ -14,7 +14,7 @@ public class IngredientConfig {
     CommandLineRunner commandLineRunner(IngredientRepository repository) {
         return args -> {
             Ingredient mehl = new Ingredient("Mehl", "Gramm", Arrays.asList("Vegan", "Vegetarisch"));
-            Ingredient butter = new Ingredient("Butter", "Gramm", Arrays.asList("vegetarisch", ""));
+            Ingredient butter = new Ingredient("Butter", "Gramm", Arrays.asList("vegetarisch"));
 
             repository.saveAll(List.of(mehl, butter));
         };

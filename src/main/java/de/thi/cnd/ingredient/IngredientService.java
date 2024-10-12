@@ -1,5 +1,6 @@
 package de.thi.cnd.ingredient;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class IngredientService {
 
     public Ingredient getIngredientById(Long ingredientId) {
         return ingredientRepository.findById(ingredientId)
-                .orElseThrow(() -> new IllegalStateException("Ingredient mit ID '" + ingredientId + "' existiert nicht"));
+                .orElseThrow(() -> new EntityNotFoundException("Ingredient mit ID '" + ingredientId + "' existiert nicht"));
     }
 
     public List<Ingredient> getIngredientsByTag(String tag) {
@@ -53,18 +54,23 @@ public class IngredientService {
     }
 
     @Transactional
-    public void updateIngredient(Long ingredientId, String name, String unit) {
+    public Ingredient updateIngredient(Long ingredientId, Ingredient updatedIngredient) {
         Ingredient ingredient = getIngredientById(ingredientId);
 
-        if (name != null) {
-            Optional<Ingredient> ingredientByName = ingredientRepository.findIngredientByName(name);
+        if (updatedIngredient.getName() != null) {
+            Optional<Ingredient> ingredientByName = ingredientRepository.findIngredientByName(updatedIngredient.getName());
             if (ingredientByName.isPresent()) {
                 throw new IllegalStateException("Ingredient existiert bereits");
             }
-            ingredient.setName(name);
+            ingredient.setName(updatedIngredient.getName());
         }
-        if (unit != null) {
-            ingredient.setUnit(unit);
+        if (updatedIngredient.getUnit() != null) {
+            ingredient.setUnit(updatedIngredient.getUnit());
         }
+        if (updatedIngredient.getTags() != null) {
+            ingredient.setTags(updatedIngredient.getTags());
+        }
+        return ingredient;
     }
+
 }

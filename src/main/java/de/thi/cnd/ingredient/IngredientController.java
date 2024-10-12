@@ -1,5 +1,6 @@
 package de.thi.cnd.ingredient;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +41,16 @@ public class IngredientController {
     }
 
     @PutMapping("{ingredientId}")
-    public void updateIngredient(@PathVariable("ingredientId") Long ingredientId, @RequestParam(required = false) String name, @RequestParam(required = false) String unit) {
-        ingredientService.updateIngredient(ingredientId, name, unit);
+    public ResponseEntity<Ingredient> updateIngredient(
+            @PathVariable("ingredientId") Long ingredientId,
+            @RequestBody Ingredient updatedIngredient) {
+
+        try {
+            Ingredient savedIngredient = ingredientService.updateIngredient(ingredientId, updatedIngredient);
+            return ResponseEntity.ok(savedIngredient);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("{ingredientId}")
