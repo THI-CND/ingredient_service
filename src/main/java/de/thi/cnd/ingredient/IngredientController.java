@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "api/ingredients")
@@ -27,6 +28,16 @@ public class IngredientController {
     @GetMapping("{ingredientId}")
     public Ingredient getIngredientById(@PathVariable("ingredientId") Long ingredientId) {
         return ingredientService.getIngredientById(ingredientId);
+    }
+
+    // Nur /tags geht nicht, da sonst "tags" als ingredientId gesehen wird - Eigenen Controller etc. für Tags schreiben?
+    @GetMapping("/tags/all")
+    public List<String> getTags() {
+        List<Ingredient> ingredients = ingredientService.getIngredients();
+        return ingredients.stream()
+                .flatMap(ingredient -> ingredient.getTags().stream())  // Alle Tags jedes Ingredients
+                .distinct()  // Duplikate entfernen
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/tags/{tag}")
