@@ -1,6 +1,7 @@
 package de.thi.cnd.ingredient;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +14,32 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "api/ingredients")
 public class IngredientController {
 
+    private RabbitTemplate rabbitTemplate;
     private final IngredientService ingredientService;
 
     @Autowired
-    public IngredientController(IngredientService ingredientService) {
+    public IngredientController(RabbitTemplate rabbitTemplate, IngredientService ingredientService) {
+        this.rabbitTemplate = rabbitTemplate;
         this.ingredientService = ingredientService;
     }
 
     @GetMapping
+    public List<Ingredient> getIngredients(@RequestParam(value = "tag", required = false) String tag) {
+        if (tag != null && !tag.isEmpty()) {
+            return ingredientService.getIngredientsByTag(tag);
+        } else {
+            return ingredientService.getIngredients();
+        }
+    }
+
+   /* @GetMapping
     public List<Ingredient> getIngredients() {
         return ingredientService.getIngredients();
-    }
+    }*/
 
     @GetMapping("{ingredientId}")
     public Ingredient getIngredientById(@PathVariable("ingredientId") Long ingredientId) {
+        this.sendMessage(ingredientService.getIngredientById(ingredientId).getName());
         return ingredientService.getIngredientById(ingredientId);
     }
 
@@ -40,10 +53,10 @@ public class IngredientController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/tags/{tag}")
+    /*@GetMapping("/tags/{tag}")
     public List<Ingredient> getIngredientsByTag(@PathVariable("tag") String tag) {
         return ingredientService.getIngredientsByTag(tag);
-    }
+    }*/
 
     @PostMapping
     public ResponseEntity<Ingredient> addIngredient(@RequestBody Ingredient ingredient) {
@@ -67,6 +80,10 @@ public class IngredientController {
     @DeleteMapping("{ingredientId}")
     public void deleteIngredient(@PathVariable("ingredientId") Long ingredientId) {
         ingredientService.deleteIngredient(ingredientId);
+    }
+
+    public void sendMessage(String message) {
+        rabbitTemplate.convertAndSend("ingredients_exchange", "ingredients_routing_key", message);
     }
 
 }

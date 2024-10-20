@@ -24,6 +24,7 @@ public class IngredientService {
             throw new IllegalStateException("Ingredient existiert bereits");
         }
         ingredientRepository.save(ingredient);
+
         return ingredient;
     }
 
