@@ -1,9 +1,6 @@
 package de.thi.cnd;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -13,8 +10,8 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class IngredientApplication {
-
-    static final String topicExchangeName = "ingredients_exchange";
+    //TODO: Konfigurierbar machen
+    static final String topicExchangeName = "cnd.ingredients_exchange";
 
     static final String queueName = "ingredients";
 
@@ -28,25 +25,19 @@ public class IngredientApplication {
         return new TopicExchange(topicExchangeName);
     }
 
-    @Bean
+    /*@Bean
     Binding binding(Queue queue, TopicExchange exchange) {
         return BindingBuilder.bind(queue()).to(exchange()).with("ingredients_routing_key");
-    }
 
-   /* @Bean
-    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
-                                             MessageListenerAdapter listenerAdapter) {
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueName);
-        container.setMessageListener(listenerAdapter);
-        return container;
-    }
-*/
-   /* @Bean
-    MessageListenerAdapter listenerAdapter(Receiver receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
     }*/
+
+    @Bean
+    public Declarables bindings() {
+        return new Declarables(
+                BindingBuilder.bind(queue()).to(exchange()).with("ingredients.created"),
+                BindingBuilder.bind(queue()).to(exchange()).with("ingredients.deleted")
+        );
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(IngredientApplication.class, args);

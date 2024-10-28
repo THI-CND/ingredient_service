@@ -1,5 +1,6 @@
 package de.thi.cnd.ingredient;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,10 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "api/ingredients")
 public class IngredientController {
 
-    private RabbitTemplate rabbitTemplate;
     private final IngredientService ingredientService;
 
     @Autowired
-    public IngredientController(RabbitTemplate rabbitTemplate, IngredientService ingredientService) {
-        this.rabbitTemplate = rabbitTemplate;
+    public IngredientController(IngredientService ingredientService) {
         this.ingredientService = ingredientService;
     }
 
@@ -39,12 +38,11 @@ public class IngredientController {
 
     @GetMapping("{ingredientId}")
     public Ingredient getIngredientById(@PathVariable("ingredientId") Long ingredientId) {
-        this.sendMessage(ingredientService.getIngredientById(ingredientId).getName());
         return ingredientService.getIngredientById(ingredientId);
     }
 
     // Nur /tags geht nicht, da sonst "tags" als ingredientId gesehen wird - Eigenen Controller etc. für Tags schreiben?
-    @GetMapping("/tags/all")
+    @GetMapping("/tags")
     public List<String> getTags() {
         List<Ingredient> ingredients = ingredientService.getIngredients();
         return ingredients.stream()
@@ -61,6 +59,8 @@ public class IngredientController {
     @PostMapping
     public ResponseEntity<Ingredient> addIngredient(@RequestBody Ingredient ingredient) {
         Ingredient savedIngredient = ingredientService.addIngredient(ingredient);
+
+        //TODO: Er hat location in body
         return ResponseEntity.status(HttpStatus.CREATED).body(savedIngredient);
     }
 
@@ -80,10 +80,6 @@ public class IngredientController {
     @DeleteMapping("{ingredientId}")
     public void deleteIngredient(@PathVariable("ingredientId") Long ingredientId) {
         ingredientService.deleteIngredient(ingredientId);
-    }
-
-    public void sendMessage(String message) {
-        rabbitTemplate.convertAndSend("ingredients_exchange", "ingredients_routing_key", message);
     }
 
 }

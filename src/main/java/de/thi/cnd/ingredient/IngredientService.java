@@ -1,9 +1,13 @@
 package de.thi.cnd.ingredient;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,10 +15,12 @@ import java.util.Optional;
 @Service
 public class IngredientService {
 
+    private RabbitTemplate rabbitTemplate;
     private final IngredientRepository ingredientRepository;
 
     @Autowired
-    public IngredientService(IngredientRepository ingredientRepository) {
+    public IngredientService(RabbitTemplate rabbitTemplate, IngredientRepository ingredientRepository) {
+        this.rabbitTemplate = rabbitTemplate;
         this.ingredientRepository = ingredientRepository;
     }
 
@@ -23,8 +29,15 @@ public class IngredientService {
         if (ingredientByName.isPresent()) {
             throw new IllegalStateException("Ingredient existiert bereits");
         }
-        ingredientRepository.save(ingredient);
 
+        try {
+            String ingredientJson = new ObjectMapper().writeValueAsString(ingredient);
+            this.sendMessage("ingredients.created", ingredientJson);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        ingredientRepository.save(ingredient);
         return ingredient;
     }
 
@@ -33,22 +46,32 @@ public class IngredientService {
     }
 
     public void deleteIngredient(Long ingredientId) {
-        if (!ingredientRepository.existsById(ingredientId)) {
-            throw new IllegalStateException("Ingredient mit ID '" + ingredientId + "' existiert nicht");
+        Optional<Ingredient> ingredientOpt = ingredientRepository.findById(ingredientId);
+        if (!ingredientOpt.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient not found");
         }
+        Ingredient ingredient = ingredientOpt.get();
+
+        try {
+            String ingredientJson = new ObjectMapper().writeValueAsString(ingredient);
+            this.sendMessage("ingredients.deleted", ingredientJson);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+
         ingredientRepository.deleteById(ingredientId);
     }
 
     public Ingredient getIngredientById(Long ingredientId) {
         return ingredientRepository.findById(ingredientId)
-                .orElseThrow(() -> new EntityNotFoundException("Ingredient mit ID '" + ingredientId + "' existiert nicht"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient not found"));
     }
 
     public List<Ingredient> getIngredientsByTag(String tag) {
         List<Ingredient> ingredients = ingredientRepository.findByTagsContaining(tag);
 
         if (ingredients.isEmpty()) {
-            throw new IllegalStateException("Keine Ingredients mit dem Tag '" + tag + "' gefunden");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No ingredients found");
         }
 
         return ingredients;
@@ -72,6 +95,10 @@ public class IngredientService {
             ingredient.setTags(updatedIngredient.getTags());
         }
         return ingredient;
+    }
+
+    public void sendMessage(String routing_key, String message) {
+        rabbitTemplate.convertAndSend("cnd.ingredients_exchange", routing_key, message);
     }
 
 }
