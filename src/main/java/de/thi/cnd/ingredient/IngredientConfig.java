@@ -13,7 +13,7 @@ public class IngredientConfig {
     @Bean
     CommandLineRunner commandLineRunner(IngredientRepository repository) {
         return args -> {
-            Ingredient mehl = new Ingredient("Mehl", "Gramm", Arrays.asList("Vegan", "Vegetarisch"));
+            Ingredient mehl = new Ingredient("Mehl", "Gramm", Arrays.asList("vegan", "vegetarisch"));
             Ingredient butter = new Ingredient("Butter", "Gramm", Arrays.asList("vegetarisch"));
 
             repository.saveAll(List.of(mehl, butter));
