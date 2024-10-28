@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class IngredientService {
@@ -29,6 +30,11 @@ public class IngredientService {
         if (ingredientByName.isPresent()) {
             throw new IllegalStateException("Ingredient existiert bereits");
         }
+
+        // Alle Tags toLowerCase
+        ingredient.setTags(ingredient.getTags().stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toList()));
 
         try {
             String ingredientJson = new ObjectMapper().writeValueAsString(ingredient);
