@@ -2,9 +2,7 @@ package de.thi.cnd.ingredient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.thi.cnd.ingredient.broker.BrokerService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
