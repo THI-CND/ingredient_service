@@ -1,4 +1,4 @@
-package de.thi.cnd.ingredient.broker;
+package old_ingredient.broker;
 
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Declarables;

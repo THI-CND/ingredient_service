@@ -1,4 +1,4 @@
-package de.thi.cnd.ingredient;
+package old_ingredient;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

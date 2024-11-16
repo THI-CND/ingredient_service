@@ -1,7 +1,7 @@
-package de.thi.cnd.ingredient;
+package old_ingredient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.thi.cnd.ingredient.broker.BrokerService;
+import de.thi.cnd.old_ingredient.broker.BrokerService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

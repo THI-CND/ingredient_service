@@ -1,4 +1,4 @@
-package de.thi.cnd.ingredient.broker;
+package old_ingredient.broker;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

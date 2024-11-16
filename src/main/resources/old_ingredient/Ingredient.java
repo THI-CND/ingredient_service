@@ -1,10 +1,11 @@
-package de.thi.cnd.ingredient;
+package old_ingredient;
 
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
+//TODO: @Data lombok als Dependency adden
 @Table
 public class Ingredient {
     @Id
