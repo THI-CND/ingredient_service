@@ -18,14 +18,14 @@ public class IngredientController {
     private IngredientService service;
 
     @PostMapping
-    public IngredientResponse createPost(@RequestBody CreateIngredientRequest request) {
+    public IngredientResponse createIngredient(@RequestBody CreateIngredientRequest request) {
         Ingredient i = service.createIngredient(request.getName(), request.getUnit(), request.getTags());
         return new IngredientResponse(i.getId(), i.getName(), i.getUnit(), i.getTags());
     }
 
     @GetMapping
-    public List<IngredientResponse> listIngredients() {
-        List<Ingredient> list = service.listIngredients();
+    public List<IngredientResponse> getIngredients() {
+        List<Ingredient> list = service.getIngredients();
 
         List<IngredientResponse> ingredients = new ArrayList<>();
 
@@ -33,6 +33,23 @@ public class IngredientController {
             ingredients.add(new IngredientResponse(i.getId(), i.getName(), i.getUnit(), i.getTags()));
         }
         return ingredients;
+    }
+
+    @GetMapping("/{id}")
+    public IngredientResponse getIngredientById(@PathVariable Long id) {
+        Ingredient i = service.getIngredientById(id);
+        return new IngredientResponse(i.getId(), i.getName(), i.getUnit(), i.getTags());
+    }
+
+    @PutMapping("/{id}")
+    public IngredientResponse updateIngredient(@PathVariable Long id, @RequestBody CreateIngredientRequest request) {
+        Ingredient i = service.updateIngredient(id, request.getName(), request.getUnit(), request.getTags());
+        return new IngredientResponse(i.getId(), i.getName(), i.getUnit(), i.getTags());
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteIngredient(@PathVariable Long id) {
+        service.deleteIngredient(id);
     }
 
 }

@@ -21,7 +21,6 @@ public class Ingredient {
     private List<String> tags;
 
     public Ingredient() {
-        //this.id = null;
     }
 
 }

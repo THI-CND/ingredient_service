@@ -9,15 +9,15 @@ public interface IngredientService {
 
     Ingredient createIngredient(String name, String unit, List<String> tags);
 
-    List<Ingredient> listIngredients();
+    List<Ingredient> getIngredients();
 
     Ingredient getIngredientById(Long ingredientId);
 
-    Ingredient updateIngredient(Long ingredientId, Ingredient updatedIngredient);
+    Ingredient updateIngredient(Long ingredientId, String name, String unit, List<String> tags);
 
     void deleteIngredient(Long ingredientId);
 
     //List<Ingredient> getIngredientsByTag(String tag);
 
-    //Set<String> getAllTags();
+    //Set<String> getTags();
 }

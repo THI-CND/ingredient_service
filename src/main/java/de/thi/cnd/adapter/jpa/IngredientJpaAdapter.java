@@ -9,43 +9,74 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class IngredientJpaAdapter implements IngredientOutputPort {
 
     @Autowired
-    IngredientRepository repo;
+    IngredientRepository ingredientRepository;
 
     @Override
-    public void save(Ingredient ingredient) {
+    public Ingredient saveIngredient(Ingredient ingredient) {
+        if (ingredientRepository.findByName(ingredient.getName()).isPresent()) {
+            throw new IllegalArgumentException("Ingredient with name " + ingredient.getName() + " already exists");
+        }
+
         IngredientEntity i = new IngredientEntity();
         i.setId(ingredient.getId());
         i.setUnit(ingredient.getUnit());
         i.setName(ingredient.getName());
         i.setTags(ingredient.getTags());
 
-        repo.save(i);
+        ingredientRepository.save(i);
+        return i.toIngredient();
     }
 
     @Override
-    public List<Ingredient> listAll() {
-        Iterable<IngredientEntity> all = repo.findAll();
+    public List<Ingredient> getIngredients() {
+        Iterable<IngredientEntity> all = ingredientRepository.findAll();
         List<Ingredient> ingredients = new ArrayList<>();
         all.forEach(el -> ingredients.add(el.toIngredient()));
         return ingredients;
     }
 
     @Override
-    public Ingredient findById(Long id) {
-        Optional<IngredientEntity> byId = repo.findById(id);
-        if(byId.isPresent()) {
-            return byId.get().toIngredient();
+    public Ingredient getIngredientById(Long id) {
+        Optional<IngredientEntity> ingredientEntity = ingredientRepository.findById(id);
+        if(ingredientEntity.isEmpty()) {
+            throw new IllegalArgumentException("Ingredient with id " + id + " not found");
         }
-        return null;
+        return ingredientEntity.get().toIngredient();
     }
 
     @Override
+    public Ingredient updateIngredient(Long ingredientId, String name, String unit, List<String> tags) {
+        Optional<IngredientEntity> ingredientEntity = ingredientRepository.findById(ingredientId);
+        if(ingredientEntity.isEmpty()) {
+            throw new IllegalArgumentException("Ingredient with id " + ingredientId + " not found");
+        }
+        IngredientEntity i = ingredientEntity.get();
+        i.setUnit(unit);
+        i.setName(name);
+        i.setTags(tags);
+        ingredientRepository.save(i);
+        return i.toIngredient();
+    }
+
+    @Override
+    public void deleteIngredient(Long id) {
+        Optional<IngredientEntity> ingredientEntity = ingredientRepository.findById(id);
+        if(ingredientEntity.isEmpty()) {
+            throw new IllegalArgumentException("Ingredient with id " + id + " not found");
+        }
+        ingredientRepository.deleteById(id);
+    }
+
+
+
+    @Override
     public long count() {
-        return this.repo.count();
+        return this.ingredientRepository.count();
     }
 }
