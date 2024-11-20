@@ -17,7 +17,7 @@ public interface IngredientService {
 
     void deleteIngredient(Long ingredientId);
 
-    //List<Ingredient> getIngredientsByTag(String tag);
+    List<String> getTags();
 
-    //Set<String> getTags();
+    List<Ingredient> getIngredientsByTag(String tag);
 }

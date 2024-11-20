@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
@@ -37,6 +35,16 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
+    public List<String> getTags() {
+        return ingredients.getTags();
+    }
+
+    @Override
+    public List<Ingredient> getIngredientsByTag(String tag) {
+        return ingredients.getIngredientsByTag(tag);
+    }
+
+    @Override
     public Ingredient getIngredientById(Long ingredientId) {
         return ingredients.getIngredientById(ingredientId);
     }
@@ -45,5 +53,7 @@ public class IngredientServiceImpl implements IngredientService {
     public Ingredient updateIngredient(Long ingredientId, String name, String unit, List<String> tags) {
         return ingredients.updateIngredient(ingredientId, name, unit, tags);
     }
+
+
 
 }

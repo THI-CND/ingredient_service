@@ -24,15 +24,24 @@ public class IngredientController {
     }
 
     @GetMapping
-    public List<IngredientResponse> getIngredients() {
-        List<Ingredient> list = service.getIngredients();
+    public List<IngredientResponse> getIngredients(@RequestParam(value = "tag", required = false) String tag) {
+        if (tag != null && !tag.isEmpty()) {
+            List<Ingredient> list = service.getIngredientsByTag(tag);
+            List<IngredientResponse> ingredients = new ArrayList<>();
 
-        List<IngredientResponse> ingredients = new ArrayList<>();
+            for (Ingredient i : list) {
+                ingredients.add(new IngredientResponse(i.getId(), i.getName(), i.getUnit(), i.getTags()));
+            }
+            return ingredients;
+        } else {
+            List<Ingredient> list = service.getIngredients();
+            List<IngredientResponse> ingredients = new ArrayList<>();
 
-        for(Ingredient i : list) {
-            ingredients.add(new IngredientResponse(i.getId(), i.getName(), i.getUnit(), i.getTags()));
+            for (Ingredient i : list) {
+                ingredients.add(new IngredientResponse(i.getId(), i.getName(), i.getUnit(), i.getTags()));
+            }
+            return ingredients;
         }
-        return ingredients;
     }
 
     @GetMapping("/{id}")
@@ -50,6 +59,11 @@ public class IngredientController {
     @DeleteMapping("/{id}")
     public void deleteIngredient(@PathVariable Long id) {
         service.deleteIngredient(id);
+    }
+
+    @GetMapping("/tags")
+    public List<String> getTags() {
+        return service.getTags();
     }
 
 }

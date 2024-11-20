@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class IngredientJpaAdapter implements IngredientOutputPort {
@@ -27,7 +28,16 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
         i.setId(ingredient.getId());
         i.setUnit(ingredient.getUnit());
         i.setName(ingredient.getName());
-        i.setTags(ingredient.getTags());
+
+        // Alle Tags toLowerCase
+        List<String> formattedTags = ingredient.getTags().stream()
+                .map(String::toLowerCase)
+                .toList();
+        ingredient.setTags(formattedTags);
+
+        checkForNewTags(ingredient.getTags(), getAllTags());
+
+        i.setTags(formattedTags);
 
         ingredientRepository.save(i);
         return i.toIngredient();
@@ -73,10 +83,43 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
         ingredientRepository.deleteById(id);
     }
 
-
-
     @Override
     public long count() {
         return this.ingredientRepository.count();
     }
+
+    @Override
+    public List<String> getTags() {
+        return ingredientRepository.findAllTags();
+    }
+
+    @Override
+    public List<Ingredient> getIngredientsByTag(String tag) {
+        Iterable<IngredientEntity> all = ingredientRepository.findByTag(tag);
+        List<Ingredient> ingredients = new ArrayList<>();
+        all.forEach(el -> ingredients.add(el.toIngredient()));
+        return ingredients;
+    }
+
+    public Set<String> getAllTags() {
+        return ingredientRepository.findAllTags().stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+    }
+
+    private void checkForNewTags(List<String> newTags, Set<String> existingTags) {
+        List<String> addedTags = newTags.stream()
+                .filter(tag -> !existingTags.contains(tag)) // Prüft, ob das Tag noch nicht existiert
+                .toList();
+
+        addedTags.forEach(tag -> {
+            try {
+                System.out.println("NEW TAG CREATED " + tag);
+                //brokerService.sendMessage(routingKeyTag, tag);
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        });
+    }
+
 }
