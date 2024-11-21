@@ -84,11 +84,6 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
     }
 
     @Override
-    public long count() {
-        return this.ingredientRepository.count();
-    }
-
-    @Override
     public List<String> getTags() {
         return ingredientRepository.findAllTags();
     }

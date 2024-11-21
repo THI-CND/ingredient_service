@@ -16,8 +16,6 @@ public interface IngredientOutputPort {
 
     void deleteIngredient(Long id);
 
-    long count();
-
     List<String> getTags();
 
     List<Ingredient> getIngredientsByTag(String tag);

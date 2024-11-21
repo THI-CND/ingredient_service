@@ -2,6 +2,7 @@ package de.thi.cnd.application;
 
 import de.thi.cnd.domain.IngredientService;
 import de.thi.cnd.domain.model.Ingredient;
+import de.thi.cnd.ports.outgoing.IngredientEvents;
 import de.thi.cnd.ports.outgoing.IngredientOutputPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ public class IngredientServiceImpl implements IngredientService {
     @Autowired
     private IngredientOutputPort ingredients;
 
+    @Autowired
+    private IngredientEvents events;
+
     @Override
     public Ingredient createIngredient(String name, String unit, List<String> tags) {
         Ingredient ingredient = new Ingredient();
@@ -21,7 +25,10 @@ public class IngredientServiceImpl implements IngredientService {
         ingredient.setUnit(unit);
         ingredient.setTags(tags);
 
-        return ingredients.saveIngredient(ingredient);
+        ingredients.saveIngredient(ingredient);
+        events.ingredientCreated(ingredient);
+
+        return ingredient;
     }
 
     @Override
