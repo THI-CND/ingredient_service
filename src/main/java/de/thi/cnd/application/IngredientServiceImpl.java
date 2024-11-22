@@ -29,10 +29,10 @@ public class IngredientServiceImpl implements IngredientService {
 
         checkForNewTags(tags, getAllTags());
 
-        ingredients.saveIngredient(ingredient);
-        events.ingredientCreated(ingredient);
+        Ingredient savedIngredient = ingredients.saveIngredient(ingredient);
+        events.ingredientCreated(savedIngredient);
 
-        return ingredient;
+        return savedIngredient;
     }
 
     @Override
