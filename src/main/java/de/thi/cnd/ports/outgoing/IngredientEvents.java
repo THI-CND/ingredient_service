@@ -6,4 +6,10 @@ public interface IngredientEvents {
 
     void ingredientCreated(Ingredient ingredient);
 
+    void ingredientUpdated(Ingredient ingredient);
+
+    void ingredientDeleted(Ingredient ingredient);
+
+    void tagCreated(String name);
+
 }

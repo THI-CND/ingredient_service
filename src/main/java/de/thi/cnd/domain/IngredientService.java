@@ -3,7 +3,6 @@ package de.thi.cnd.domain;
 import de.thi.cnd.domain.model.Ingredient;
 
 import java.util.List;
-import java.util.Set;
 
 public interface IngredientService {
 

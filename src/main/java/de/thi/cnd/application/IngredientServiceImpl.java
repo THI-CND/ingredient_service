@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
@@ -25,6 +27,8 @@ public class IngredientServiceImpl implements IngredientService {
         ingredient.setUnit(unit);
         ingredient.setTags(tags);
 
+        checkForNewTags(tags, getAllTags());
+
         ingredients.saveIngredient(ingredient);
         events.ingredientCreated(ingredient);
 
@@ -38,6 +42,8 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public void deleteIngredient(Long ingredientId) {
+        Ingredient deletedIngredient = ingredients.getIngredientById(ingredientId);
+        events.ingredientDeleted(deletedIngredient);
         ingredients.deleteIngredient(ingredientId);
     }
 
@@ -58,9 +64,33 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Ingredient updateIngredient(Long ingredientId, String name, String unit, List<String> tags) {
-        return ingredients.updateIngredient(ingredientId, name, unit, tags);
+        checkForNewTags(tags, getAllTags());
+
+        Ingredient updatedIngredient = ingredients.updateIngredient(ingredientId, name, unit, tags);
+        events.ingredientUpdated(updatedIngredient);
+        return updatedIngredient;
     }
 
 
+    public Set<String> getAllTags() {
+        return ingredients.getTags().stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+    }
+
+    private void checkForNewTags(List<String> newTags, Set<String> existingTags) {
+        List<String> addedTags = newTags.stream()
+                .filter(tag -> !existingTags.contains(tag.toLowerCase())) // Prüft, ob das Tag noch nicht existiert
+                .toList();
+
+        addedTags.forEach(tag -> {
+            try {
+                System.out.println("NEW TAG CREATED " + tag);
+                events.tagCreated(tag);
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        });
+    }
 
 }

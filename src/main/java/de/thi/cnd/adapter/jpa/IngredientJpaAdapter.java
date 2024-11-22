@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class IngredientJpaAdapter implements IngredientOutputPort {
@@ -25,21 +23,19 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
         }
 
         IngredientEntity i = new IngredientEntity();
-        i.setId(ingredient.getId());
-        i.setUnit(ingredient.getUnit());
+        //i.setId(ingredient.getId());
         i.setName(ingredient.getName());
+        i.setUnit(ingredient.getUnit());
 
         // Alle Tags toLowerCase
         List<String> formattedTags = ingredient.getTags().stream()
                 .map(String::toLowerCase)
                 .toList();
-        ingredient.setTags(formattedTags);
-
-        checkForNewTags(ingredient.getTags(), getAllTags());
 
         i.setTags(formattedTags);
 
         ingredientRepository.save(i);
+
         return i.toIngredient();
     }
 
@@ -96,25 +92,6 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
         return ingredients;
     }
 
-    public Set<String> getAllTags() {
-        return ingredientRepository.findAllTags().stream()
-                .map(String::toLowerCase)
-                .collect(Collectors.toSet());
-    }
 
-    private void checkForNewTags(List<String> newTags, Set<String> existingTags) {
-        List<String> addedTags = newTags.stream()
-                .filter(tag -> !existingTags.contains(tag)) // Prüft, ob das Tag noch nicht existiert
-                .toList();
-
-        addedTags.forEach(tag -> {
-            try {
-                System.out.println("NEW TAG CREATED " + tag);
-                //brokerService.sendMessage(routingKeyTag, tag);
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-            }
-        });
-    }
 
 }

@@ -13,7 +13,22 @@ public class IngredientEventsImpl implements IngredientEvents {
 
     @Override
     public void ingredientCreated(Ingredient ingredient) {
-        messagingService.sendMessage("ingredient.created", ingredient.toString());
+        messagingService.sendMessage("ingredients.created", ingredient.toString());
+    }
+
+    @Override
+    public void ingredientUpdated(Ingredient ingredient) {
+        messagingService.sendMessage("ingredients.updated", ingredient.toString());
+    }
+
+    @Override
+    public void ingredientDeleted(Ingredient ingredient) {
+        messagingService.sendMessage("ingredients.deleted", ingredient.toString());
+    }
+
+    @Override
+    public void tagCreated(String name) {
+        messagingService.sendMessage("ingredients.tags.created", name);
     }
 
 }
