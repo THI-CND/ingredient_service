@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class IngredientJpaAdapter implements IngredientOutputPort {
@@ -23,16 +24,9 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
         }
 
         IngredientEntity i = new IngredientEntity();
-        //i.setId(ingredient.getId());
         i.setName(ingredient.getName());
         i.setUnit(ingredient.getUnit());
-
-        // Alle Tags toLowerCase
-        List<String> formattedTags = ingredient.getTags().stream()
-                .map(String::toLowerCase)
-                .toList();
-
-        i.setTags(formattedTags);
+        i.setTags(formatTags(ingredient.getTags()));
 
         ingredientRepository.save(i);
 
@@ -50,7 +44,7 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
     @Override
     public Ingredient getIngredientById(Long id) {
         Optional<IngredientEntity> ingredientEntity = ingredientRepository.findById(id);
-        if(ingredientEntity.isEmpty()) {
+        if (ingredientEntity.isEmpty()) {
             throw new IllegalArgumentException("Ingredient with id " + id + " not found");
         }
         return ingredientEntity.get().toIngredient();
@@ -59,13 +53,14 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
     @Override
     public Ingredient updateIngredient(Long ingredientId, String name, String unit, List<String> tags) {
         Optional<IngredientEntity> ingredientEntity = ingredientRepository.findById(ingredientId);
-        if(ingredientEntity.isEmpty()) {
+        if (ingredientEntity.isEmpty()) {
             throw new IllegalArgumentException("Ingredient with id " + ingredientId + " not found");
         }
         IngredientEntity i = ingredientEntity.get();
         i.setUnit(unit);
         i.setName(name);
-        i.setTags(tags);
+        i.setTags(formatTags(tags));
+
         ingredientRepository.save(i);
         return i.toIngredient();
     }
@@ -73,7 +68,7 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
     @Override
     public void deleteIngredient(Long id) {
         Optional<IngredientEntity> ingredientEntity = ingredientRepository.findById(id);
-        if(ingredientEntity.isEmpty()) {
+        if (ingredientEntity.isEmpty()) {
             throw new IllegalArgumentException("Ingredient with id " + id + " not found");
         }
         ingredientRepository.deleteById(id);
@@ -92,6 +87,11 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
         return ingredients;
     }
 
+    private List<String> formatTags(List<String> tags) {
+        return tags != null ? new ArrayList<>(tags.stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toList())) : new ArrayList<>();
+    }
 
 
 }

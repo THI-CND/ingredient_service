@@ -79,6 +79,10 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     private void checkForNewTags(List<String> newTags, Set<String> existingTags) {
+        if(newTags == null) {
+            return;
+        }
+
         List<String> addedTags = newTags.stream()
                 .filter(tag -> !existingTags.contains(tag.toLowerCase())) // Prüft, ob das Tag noch nicht existiert
                 .toList();
