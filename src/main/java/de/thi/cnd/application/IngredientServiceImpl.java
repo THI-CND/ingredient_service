@@ -85,8 +85,7 @@ public class IngredientServiceImpl implements IngredientService {
 
         addedTags.forEach(tag -> {
             try {
-                System.out.println("NEW TAG CREATED " + tag);
-                events.tagCreated(tag);
+                events.tagCreated(tag.toLowerCase());
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }

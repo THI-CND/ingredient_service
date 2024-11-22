@@ -2,6 +2,7 @@ package de.thi.cnd.adapter.api.rest;
 
 import de.thi.cnd.adapter.api.rest.dto.CreateIngredientRequest;
 import de.thi.cnd.adapter.api.rest.dto.IngredientResponse;
+import de.thi.cnd.adapter.api.rest.dto.UpdateIngredientRequest;
 import de.thi.cnd.domain.IngredientService;
 import de.thi.cnd.domain.model.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class IngredientController {
     }
 
     @PutMapping("/{id}")
-    public IngredientResponse updateIngredient(@PathVariable Long id, @RequestBody CreateIngredientRequest request) {
+    public IngredientResponse updateIngredient(@PathVariable Long id, @RequestBody UpdateIngredientRequest request) {
         Ingredient i = service.updateIngredient(id, request.getName(), request.getUnit(), request.getTags());
         return new IngredientResponse(i.getId(), i.getName(), i.getUnit(), i.getTags());
     }

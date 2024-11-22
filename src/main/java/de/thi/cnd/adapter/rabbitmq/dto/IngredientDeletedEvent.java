@@ -3,10 +3,15 @@ package de.thi.cnd.adapter.rabbitmq.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
-public class NewTagCreatedEvent {
+public class IngredientDeletedEvent {
 
+    private Long id;
     private String name;
+    private String unit;
+    private List<String> tags;
 
 }

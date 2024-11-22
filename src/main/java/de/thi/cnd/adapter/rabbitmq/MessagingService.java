@@ -1,5 +1,6 @@
 package de.thi.cnd.adapter.rabbitmq;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,8 +19,17 @@ public class MessagingService {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void sendMessage(String routing_key, String message) {
-        rabbitTemplate.convertAndSend(topicExchangeName, routing_key, message);
+    public void publish(String routingKey, Object object) {
+        String content = asJsonString(object);
+        rabbitTemplate.convertAndSend(topicExchangeName, routingKey, content);
+    }
+
+    static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
