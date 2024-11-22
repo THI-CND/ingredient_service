@@ -21,7 +21,7 @@ jobs:
     
     - name: Build the Docker image
       run: |
-        docker build -t ghcr.io/${{ github.repository }}/ingredient_service:latest .
+        docker build -t ghcr.io/thi-cnd/ingredient_service:latest .
     
     - name: Push Docker Image to GHCR
       run: |
