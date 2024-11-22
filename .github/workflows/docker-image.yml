@@ -25,4 +25,4 @@ jobs:
     
     - name: Push Docker Image to GHCR
       run: |
-        docker push ghcr.io/${{ github.repository }}/my-app:latest
+        docker push ghcr.io/thi-cnd/ingredient_service:latest
