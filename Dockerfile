@@ -1,13 +1,27 @@
-# the base image
-FROM amazoncorretto:17
+# Stage 1: Build the application
+FROM maven:3.9-eclipse-temurin-17 as builder
 
-# the JAR file path
-ARG JAR_FILE=target/*.jar
+# Set the working directory inside the container
+WORKDIR /app
 
-# Copy the JAR file from the build context into the Docker image
-COPY ${JAR_FILE} application.jar
+# Copy the Maven project files
+COPY pom.xml ./
+COPY src ./src
 
-CMD apt-get update -y
+# Build the application
+RUN mvn clean package -DskipTests
 
-# Set the default command to run the Java application
-ENTRYPOINT ["java", "-Xmx2048M", "-jar", "/application.jar"]
+# Stage 2: Create a lightweight image with the application
+FROM eclipse-temurin:17-jre
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the built application JAR from the builder stage
+COPY --from=builder /app/target/*.jar app.jar
+
+# Expose the application port
+EXPOSE 8080
+
+# Set the entrypoint to run the application
+#ENTRYPOINT ["java", "-jar", "app.jar"]
