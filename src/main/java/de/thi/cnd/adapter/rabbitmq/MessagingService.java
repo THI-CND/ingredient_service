@@ -21,7 +21,11 @@ public class MessagingService {
 
     public void publish(String routingKey, Object object) {
         String content = asJsonString(object);
-        rabbitTemplate.convertAndSend(topicExchangeName, routingKey, content);
+        try {
+            rabbitTemplate.convertAndSend(topicExchangeName, routingKey, content);
+        } catch (Exception e) {
+            System.out.println("Could not send RabbitMQ message: " + e.getMessage());
+        }
     }
 
     static String asJsonString(final Object obj) {
