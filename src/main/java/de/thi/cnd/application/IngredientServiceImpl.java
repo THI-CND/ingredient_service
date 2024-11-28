@@ -63,6 +63,11 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
+    public Ingredient getIngredientByName(String name) {
+        return ingredients.getIngredientByName(name);
+    }
+
+    @Override
     public Ingredient updateIngredient(Long ingredientId, String name, String unit, List<String> tags) {
         checkForNewTags(tags, getAllTags());
 

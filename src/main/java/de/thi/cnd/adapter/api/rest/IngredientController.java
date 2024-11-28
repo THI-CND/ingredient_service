@@ -6,7 +6,9 @@ import de.thi.cnd.adapter.api.rest.dto.UpdateIngredientRequest;
 import de.thi.cnd.domain.IngredientService;
 import de.thi.cnd.domain.model.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,9 @@ public class IngredientController {
 
     @PostMapping
     public IngredientResponse createIngredient(@RequestBody CreateIngredientRequest request) {
+        if(service.getIngredientByName(request.getName()) != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingredient with name " + request.getName() + " already exists");
+        }
         Ingredient i = service.createIngredient(request.getName(), request.getUnit(), request.getTags());
         return new IngredientResponse(i.getId(), i.getName(), i.getUnit(), i.getTags());
     }

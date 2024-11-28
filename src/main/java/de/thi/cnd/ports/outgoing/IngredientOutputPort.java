@@ -12,6 +12,8 @@ public interface IngredientOutputPort {
 
     Ingredient getIngredientById(Long id);
 
+    Ingredient getIngredientByName(String name);
+
     Ingredient updateIngredient(Long ingredientId, String name, String unit, List<String> tags);
 
     void deleteIngredient(Long id);

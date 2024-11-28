@@ -51,6 +51,12 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
     }
 
     @Override
+    public Ingredient getIngredientByName(String name) {
+        Optional<IngredientEntity> ingredientEntity = ingredientRepository.findByName(name);
+        return ingredientEntity.map(IngredientEntity::toIngredient).orElse(null);
+    }
+
+    @Override
     public Ingredient updateIngredient(Long ingredientId, String name, String unit, List<String> tags) {
         Optional<IngredientEntity> ingredientEntity = ingredientRepository.findById(ingredientId);
         if (ingredientEntity.isEmpty()) {
