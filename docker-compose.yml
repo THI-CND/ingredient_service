@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  ingredientsservice:
+  ingredientservice:
     image: 'docker-spring-boot-postgres:latest'
     build:
       context: .
-    container_name: ingredientsservice
+    container_name: ingredientservice
     depends_on:
       - db
     environment:
