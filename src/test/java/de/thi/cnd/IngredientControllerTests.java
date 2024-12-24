@@ -46,7 +46,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void testCreateIngredient() throws Exception {
+    void testCreateIngredient() throws Exception {
         CreateIngredientRequest ingredient = new CreateIngredientRequest();
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
@@ -62,7 +62,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void testCreateIngredientWithExistingName() throws Exception {
+    void testCreateIngredientWithExistingName() throws Exception {
         CreateIngredientRequest ingredient = new CreateIngredientRequest();
         ingredient.setName("Zucker");
         mvc.perform(post("/ingredients")
@@ -80,7 +80,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void testReadIngredientById() throws Exception {
+    void testReadIngredientById() throws Exception {
         CreateIngredientRequest ingredient = new CreateIngredientRequest();
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
@@ -105,7 +105,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void testReadIngredients() throws Exception {
+    void testReadIngredients() throws Exception {
         CreateIngredientRequest ingredient = new CreateIngredientRequest();
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
@@ -124,7 +124,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void testReadIngredientsByTag() throws Exception {
+    void testReadIngredientsByTag() throws Exception {
         CreateIngredientRequest ingredient = new CreateIngredientRequest();
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
@@ -143,7 +143,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void testUpdateIngredient() throws Exception {
+    void testUpdateIngredient() throws Exception {
         CreateIngredientRequest ingredient = new CreateIngredientRequest();
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
@@ -158,8 +158,7 @@ public class IngredientControllerTests {
 
         String jsonResponse = result.getResponse().getContentAsString();
         JsonNode jsonNode = new ObjectMapper().readTree(jsonResponse);
-        Long ingredientId = jsonNode.get("id").asLong();
-        System.out.println(ingredientId);
+        long ingredientId = jsonNode.get("id").asLong();
 
         UpdateIngredientRequest updatedIngredient = new UpdateIngredientRequest();
         updatedIngredient.setName("Salz");
@@ -179,7 +178,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void testDeleteIngredient() throws Exception {
+    void testDeleteIngredient() throws Exception {
         CreateIngredientRequest ingredient = new CreateIngredientRequest();
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
