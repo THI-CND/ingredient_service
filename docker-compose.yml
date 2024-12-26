@@ -1,29 +1,37 @@
 version: '3.8'
 
 services:
-  ingredientservice:
-    image: 'docker-spring-boot-postgres:latest'
-    build:
-      context: .
-    container_name: ingredientservice
-    depends_on:
-      - db
-    environment:
-      - POSTGRES_USER=$DB_USER
-      - POSTGRES_PASSWORD=$DB_PASSWORD
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/$DB_DATABASE
-      - SPRING_DATASOURCE_USERNAME=$DB_USER
-      - SPRING_DATASOURCE_PASSWORD=$DB_PASSWORD
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    ports:
-      - "8080:8080"
-
-  db:
+  postgres:
     image: postgres
-    container_name: db
-    environment:
-      - POSTGRES_USER=$DB_USER
-      - POSTGRES_PASSWORD=$DB_PASSWORD
-      - POSTGRES_DB=$DB_DATABASE
+    restart: unless-stopped
     ports:
-      - "$LOCAL_PORT:$DOCKER_PORT"
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ingredient
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+#  ingredientservice:
+#    image: ghcr.io/thi-cnd/ingredient_service:latest
+#    platform: linux/amd64
+#    restart: unless-stopped
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      DB_URL: jdbc:postgresql://postgres:5432/ingredient
+#      DB_USER: postgres
+#      DB_PASSWORD: password
+#      RABBIT_HOST: rabbitmq
+#      RABBIT_PORT: 5672
+#      RABBIT_USER: guest
+#      RABBIT_PASSWORD: guest
+#    depends_on:
+#      - postgres
+#      - rabbitmq
