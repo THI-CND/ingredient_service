@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package de.thi.cnd.ingredientservice;
+
+option java_multiple_files = true;
+option java_package = "de.thi.cnd.ingredient";
+option java_outer_classname = "IngredientProto";
+
+service IngredientService {
+  rpc GetIngredients(Empty) returns (IngredientsResponse);
+  rpc GetIngredient(IngredientIdRequest) returns (IngredientResponse);
+  rpc CreateIngredient(CreateIngredientRequest) returns (IngredientResponse);
+  rpc UpdateIngredient(UpdateIngredientRequest) returns (IngredientResponse);
+  rpc DeleteIngredient(IngredientIdRequest) returns (Empty);
+  rpc GetTags(Empty) returns (TagsResponse);
+}
+
+message Empty {
+}
+
+message IngredientsResponse {
+  repeated IngredientResponse ingredients = 1;
+}
+
+message IngredientResponse {
+  int64 id = 1;
+  string name = 2;
+  string unit = 3;
+  repeated string tags = 4;
+}
+
+message IngredientIdRequest {
+  int64 id = 1;
+}
+
+message CreateIngredientRequest {
+  string name = 1;
+  string unit = 2;
+  repeated string tags = 3;
+}
+
+message UpdateIngredientRequest {
+  int64 id = 1;
+  string name = 2;
+  string unit = 3;
+  repeated string tags = 4;
+}
+
+message TagsResponse {
+  repeated string tags = 1;
+}
