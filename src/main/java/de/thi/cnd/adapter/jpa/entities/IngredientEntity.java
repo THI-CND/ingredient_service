@@ -18,7 +18,7 @@ public class IngredientEntity {
     private String name;
     private String unit;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> tags;
 
     public IngredientEntity() {
