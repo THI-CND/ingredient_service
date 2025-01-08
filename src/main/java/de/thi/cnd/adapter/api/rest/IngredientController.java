@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/ingredients")
@@ -22,7 +23,7 @@ public class IngredientController {
 
     @PostMapping
     public IngredientResponse createIngredient(@RequestBody CreateIngredientRequest request) {
-        if(service.getIngredientByName(request.getName()) != null) {
+        if(service.getIngredientByName(request.getName()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingredient with name " + request.getName() + " already exists");
         }
         Ingredient i = service.createIngredient(request.getName(), request.getUnit(), request.getTags());
@@ -52,14 +53,20 @@ public class IngredientController {
 
     @GetMapping("/{id}")
     public IngredientResponse getIngredientById(@PathVariable Long id) {
-        Ingredient i = service.getIngredientById(id);
-        return new IngredientResponse(i.getId(), i.getName(), i.getUnit(), i.getTags());
+        Optional<Ingredient> i = service.getIngredientById(id);
+        if (i.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient not found");
+        }
+        return new IngredientResponse(i.get().getId(), i.get().getName(), i.get().getUnit(), i.get().getTags());
     }
 
     @PutMapping("/{id}")
     public IngredientResponse updateIngredient(@PathVariable Long id, @RequestBody UpdateIngredientRequest request) {
-        Ingredient i = service.updateIngredient(id, request.getName(), request.getUnit(), request.getTags());
-        return new IngredientResponse(i.getId(), i.getName(), i.getUnit(), i.getTags());
+        Optional<Ingredient> i = service.updateIngredient(id, request.getName(), request.getUnit(), request.getTags());
+        if (i.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient not found");
+        }
+        return new IngredientResponse(i.get().getId(), i.get().getName(), i.get().getUnit(), i.get().getTags());
     }
 
     @DeleteMapping("/{id}")

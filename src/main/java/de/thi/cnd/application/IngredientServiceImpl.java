@@ -1,5 +1,6 @@
 package de.thi.cnd.application;
 
+import de.thi.cnd.adapter.jpa.IngredientRepository;
 import de.thi.cnd.domain.IngredientService;
 import de.thi.cnd.domain.model.Ingredient;
 import de.thi.cnd.ports.outgoing.IngredientEvents;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,8 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Autowired
     private IngredientEvents events;
+    @Autowired
+    private IngredientRepository ingredientRepository;
 
     @Override
     public Ingredient createIngredient(String name, String unit, List<String> tags) {
@@ -42,9 +46,11 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public void deleteIngredient(Long ingredientId) {
-        Ingredient deletedIngredient = ingredients.getIngredientById(ingredientId);
-        events.ingredientDeleted(deletedIngredient);
-        ingredients.deleteIngredient(ingredientId);
+        Optional<Ingredient> ingredient = ingredients.getIngredientById(ingredientId);
+        if(ingredient.isPresent()) {
+            ingredients.deleteIngredient(ingredientId);
+            events.ingredientDeleted(ingredient.get());
+        }
     }
 
     @Override
@@ -58,22 +64,31 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Ingredient getIngredientById(Long ingredientId) {
+    public Optional<Ingredient> getIngredientById(Long ingredientId) {
         return ingredients.getIngredientById(ingredientId);
     }
 
     @Override
-    public Ingredient getIngredientByName(String name) {
+    public Optional<Ingredient> getIngredientByName(String name) {
         return ingredients.getIngredientByName(name);
     }
 
     @Override
-    public Ingredient updateIngredient(Long ingredientId, String name, String unit, List<String> tags) {
-        checkForNewTags(tags, getAllTags());
+    public Optional<Ingredient> updateIngredient(Long ingredientId, String name, String unit, List<String> tags) {
+        if(ingredientRepository.existsById(ingredientId)) {
+            Ingredient updatedIngredient = new Ingredient();
+            updatedIngredient.setName(name);
+            updatedIngredient.setUnit(unit);
+            updatedIngredient.setTags(tags);
 
-        Ingredient updatedIngredient = ingredients.updateIngredient(ingredientId, name, unit, tags);
-        events.ingredientUpdated(updatedIngredient);
-        return updatedIngredient;
+            checkForNewTags(tags, getAllTags());
+
+            Ingredient savedIngredient = ingredients.saveIngredient(updatedIngredient);
+            events.ingredientUpdated(savedIngredient);
+
+            return Optional.of(savedIngredient);
+        }
+       return Optional.empty();
     }
 
 

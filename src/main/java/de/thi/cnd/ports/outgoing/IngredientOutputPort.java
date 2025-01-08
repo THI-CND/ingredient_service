@@ -3,6 +3,7 @@ package de.thi.cnd.ports.outgoing;
 import de.thi.cnd.domain.model.Ingredient;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IngredientOutputPort {
 
@@ -10,11 +11,11 @@ public interface IngredientOutputPort {
 
     List<Ingredient> getIngredients();
 
-    Ingredient getIngredientById(Long id);
+    Optional<Ingredient> getIngredientById(Long id);
 
-    Ingredient getIngredientByName(String name);
+    Optional<Ingredient> getIngredientByName(String name);
 
-    Ingredient updateIngredient(Long ingredientId, String name, String unit, List<String> tags);
+    Optional<Ingredient> updateIngredient(Long ingredientId, String name, String unit, List<String> tags);
 
     void deleteIngredient(Long id);
 

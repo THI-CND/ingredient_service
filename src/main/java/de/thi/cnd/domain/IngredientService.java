@@ -3,6 +3,7 @@ package de.thi.cnd.domain;
 import de.thi.cnd.domain.model.Ingredient;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IngredientService {
 
@@ -10,11 +11,11 @@ public interface IngredientService {
 
     List<Ingredient> getIngredients();
 
-    Ingredient getIngredientById(Long ingredientId);
+    Optional<Ingredient> getIngredientById(Long ingredientId);
 
-    Ingredient getIngredientByName(String name);
+    Optional<Ingredient> getIngredientByName(String name);
 
-    Ingredient updateIngredient(Long ingredientId, String name, String unit, List<String> tags);
+    Optional<Ingredient> updateIngredient(Long ingredientId, String name, String unit, List<String> tags);
 
     void deleteIngredient(Long ingredientId);
 

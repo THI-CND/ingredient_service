@@ -42,33 +42,29 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
     }
 
     @Override
-    public Ingredient getIngredientById(Long id) {
+    public Optional<Ingredient> getIngredientById(Long id) {
         Optional<IngredientEntity> ingredientEntity = ingredientRepository.findById(id);
-        if (ingredientEntity.isEmpty()) {
-            throw new IllegalArgumentException("Ingredient with id " + id + " not found");
-        }
-        return ingredientEntity.get().toIngredient();
+        return ingredientEntity.map(IngredientEntity::toIngredient);
     }
 
     @Override
-    public Ingredient getIngredientByName(String name) {
+    public Optional<Ingredient> getIngredientByName(String name) {
         Optional<IngredientEntity> ingredientEntity = ingredientRepository.findByName(name);
-        return ingredientEntity.map(IngredientEntity::toIngredient).orElse(null);
+        return ingredientEntity.map(IngredientEntity::toIngredient);
     }
 
     @Override
-    public Ingredient updateIngredient(Long ingredientId, String name, String unit, List<String> tags) {
+    public Optional<Ingredient> updateIngredient(Long ingredientId, String name, String unit, List<String> tags) {
         Optional<IngredientEntity> ingredientEntity = ingredientRepository.findById(ingredientId);
         if (ingredientEntity.isEmpty()) {
             throw new IllegalArgumentException("Ingredient with id " + ingredientId + " not found");
         }
         IngredientEntity i = ingredientEntity.get();
-        i.setUnit(unit);
         i.setName(name);
+        i.setUnit(unit);
         i.setTags(formatTags(tags));
-
         ingredientRepository.save(i);
-        return i.toIngredient();
+        return Optional.of(i.toIngredient());
     }
 
     @Override
