@@ -3,10 +3,12 @@ package de.thi.cnd.adapter.api.grpc;
 import de.thi.cnd.domain.IngredientService;
 import de.thi.cnd.domain.model.Ingredient;
 import de.thi.cnd.ingredient.*;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 
 import java.util.List;
+import java.util.Optional;
 
 @GrpcService
 public class IngredientGrpcController extends IngredientServiceGrpc.IngredientServiceImplBase {
@@ -39,12 +41,18 @@ public class IngredientGrpcController extends IngredientServiceGrpc.IngredientSe
 
     @Override
     public void getIngredient(IngredientIdRequest request, StreamObserver<IngredientResponse> responseObserver) {
-        Ingredient ingredient = ingredientService.getIngredientById(request.getId());
+        Optional<Ingredient> ingredient = ingredientService.getIngredientById(request.getId());
+
+        if (ingredient.isEmpty()) {
+            responseObserver.onError(Status.NOT_FOUND.withDescription("Ingredient not found").asException());
+            return;
+        }
+
         IngredientResponse response = IngredientResponse.newBuilder()
-                .setId(ingredient.getId())
-                .setName(ingredient.getName())
-                .setUnit(ingredient.getUnit())
-                .addAllTags(ingredient.getTags())
+                .setId(ingredient.get().getId())
+                .setName(ingredient.get().getName())
+                .setUnit(ingredient.get().getUnit())
+                .addAllTags(ingredient.get().getTags())
                 .build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
@@ -65,12 +73,18 @@ public class IngredientGrpcController extends IngredientServiceGrpc.IngredientSe
 
     @Override
     public void updateIngredient(UpdateIngredientRequest request, StreamObserver<IngredientResponse> responseObserver) {
-        Ingredient ingredient = ingredientService.updateIngredient(request.getId(), request.getName(), request.getUnit(), request.getTagsList());
+        Optional<Ingredient> ingredient = ingredientService.updateIngredient(request.getId(), request.getName(), request.getUnit(), request.getTagsList());
+
+        if (ingredient.isEmpty()) {
+            responseObserver.onError(Status.NOT_FOUND.withDescription("Ingredient not found").asException());
+            return;
+        }
+
         IngredientResponse response = IngredientResponse.newBuilder()
-                .setId(ingredient.getId())
-                .setName(ingredient.getName())
-                .setUnit(ingredient.getUnit())
-                .addAllTags(ingredient.getTags())
+                .setId(ingredient.get().getId())
+                .setName(ingredient.get().getName())
+                .setUnit(ingredient.get().getUnit())
+                .addAllTags(ingredient.get().getTags())
                 .build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
