@@ -7,6 +7,7 @@ import de.thi.cnd.domain.IngredientService;
 import de.thi.cnd.domain.model.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -70,8 +71,13 @@ public class IngredientController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteIngredient(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteIngredient(@PathVariable Long id) {
+        Optional<Ingredient> i = service.getIngredientById(id);
+        if (i.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient not found");
+        }
         service.deleteIngredient(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/tags")
