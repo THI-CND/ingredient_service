@@ -21,7 +21,7 @@ public class IngredientGrpcController extends IngredientServiceGrpc.IngredientSe
 
     @Override
     public void getIngredients(Empty request, StreamObserver<IngredientsResponse> responseObserver) {
-        List<Ingredient> ingredients = ingredientService.getIngredientsRepository();
+        List<Ingredient> ingredients = ingredientService.getIngredients();
         IngredientsResponse.Builder responseBuilder = IngredientsResponse.newBuilder();
 
         for (Ingredient ingredient : ingredients) {

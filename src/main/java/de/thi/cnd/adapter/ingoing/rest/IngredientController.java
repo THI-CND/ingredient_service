@@ -44,7 +44,7 @@ public class IngredientController {
             }
             return ingredients;
         } else {
-            List<Ingredient> list = ingredientService.getIngredientsRepository();
+            List<Ingredient> list = ingredientService.getIngredients();
             List<IngredientResponse> ingredients = new ArrayList<>();
 
             for (Ingredient i : list) {

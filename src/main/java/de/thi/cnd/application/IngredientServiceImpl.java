@@ -42,7 +42,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public List<Ingredient> getIngredientsRepository() {
+    public List<Ingredient> getIngredients() {
         return ingredientsRepository.getIngredients();
     }
 
