@@ -1,8 +1,8 @@
-package de.thi.cnd.adapter.api.rest;
+package de.thi.cnd.adapter.ingoing.rest;
 
-import de.thi.cnd.adapter.api.rest.dto.CreateIngredientRequest;
-import de.thi.cnd.adapter.api.rest.dto.IngredientResponse;
-import de.thi.cnd.adapter.api.rest.dto.UpdateIngredientRequest;
+import de.thi.cnd.adapter.ingoing.rest.dto.CreateIngredientRequest;
+import de.thi.cnd.adapter.ingoing.rest.dto.IngredientResponse;
+import de.thi.cnd.adapter.ingoing.rest.dto.UpdateIngredientRequest;
 import de.thi.cnd.domain.IngredientService;
 import de.thi.cnd.domain.model.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/ingredients")
+@RequestMapping("/api/v1/ingredients")
 public class IngredientController {
 
     @Autowired

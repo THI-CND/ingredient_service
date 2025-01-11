@@ -1,4 +1,4 @@
-package de.thi.cnd.adapter.jpa.entities;
+package de.thi.cnd.adapter.outgoing.jpa.entities;
 
 import de.thi.cnd.domain.model.Ingredient;
 import jakarta.persistence.*;

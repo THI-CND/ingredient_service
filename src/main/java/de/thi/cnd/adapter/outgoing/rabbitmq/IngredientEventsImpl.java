@@ -1,9 +1,9 @@
-package de.thi.cnd.adapter.rabbitmq;
+package de.thi.cnd.adapter.outgoing.rabbitmq;
 
-import de.thi.cnd.adapter.rabbitmq.dto.IngredientCreatedEvent;
-import de.thi.cnd.adapter.rabbitmq.dto.IngredientDeletedEvent;
-import de.thi.cnd.adapter.rabbitmq.dto.IngredientUpdatedEvent;
-import de.thi.cnd.adapter.rabbitmq.dto.TagCreatedEvent;
+import de.thi.cnd.adapter.outgoing.rabbitmq.dto.IngredientCreatedEvent;
+import de.thi.cnd.adapter.outgoing.rabbitmq.dto.IngredientDeletedEvent;
+import de.thi.cnd.adapter.outgoing.rabbitmq.dto.IngredientUpdatedEvent;
+import de.thi.cnd.adapter.outgoing.rabbitmq.dto.TagCreatedEvent;
 import de.thi.cnd.domain.model.Ingredient;
 import de.thi.cnd.ports.outgoing.IngredientEvents;
 import org.springframework.beans.factory.annotation.Autowired;

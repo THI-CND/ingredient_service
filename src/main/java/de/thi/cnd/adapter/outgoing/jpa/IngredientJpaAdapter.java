@@ -1,6 +1,6 @@
-package de.thi.cnd.adapter.jpa;
+package de.thi.cnd.adapter.outgoing.jpa;
 
-import de.thi.cnd.adapter.jpa.entities.IngredientEntity;
+import de.thi.cnd.adapter.outgoing.jpa.entities.IngredientEntity;
 import de.thi.cnd.domain.model.Ingredient;
 import de.thi.cnd.ports.outgoing.IngredientOutputPort;
 import org.springframework.beans.factory.annotation.Autowired;

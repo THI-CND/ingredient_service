@@ -1,6 +1,6 @@
-package de.thi.cnd.adapter.jpa;
+package de.thi.cnd.adapter.outgoing.jpa;
 
-import de.thi.cnd.adapter.jpa.entities.IngredientEntity;
+import de.thi.cnd.adapter.outgoing.jpa.entities.IngredientEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

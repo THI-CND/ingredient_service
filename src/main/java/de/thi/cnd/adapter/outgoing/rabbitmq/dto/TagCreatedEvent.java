@@ -1,4 +1,4 @@
-package de.thi.cnd.adapter.rabbitmq.dto;
+package de.thi.cnd.adapter.outgoing.rabbitmq.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

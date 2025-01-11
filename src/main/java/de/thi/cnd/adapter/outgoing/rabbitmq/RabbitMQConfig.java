@@ -1,4 +1,4 @@
-package de.thi.cnd.adapter.rabbitmq;
+package de.thi.cnd.adapter.outgoing.rabbitmq;
 
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Declarables;
