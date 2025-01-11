@@ -94,8 +94,7 @@ class IngredientControllerTests {
 
         String jsonResponse = result.getResponse().getContentAsString();
         JsonNode jsonNode = new ObjectMapper().readTree(jsonResponse);
-        Long ingredientId = jsonNode.get("id").asLong();
-        System.out.println(ingredientId);
+        long ingredientId = jsonNode.get("id").asLong();
 
         mvc.perform(get("/api/v1/ingredients/" + ingredientId)
                         .accept(MediaType.APPLICATION_JSON))
@@ -192,8 +191,7 @@ class IngredientControllerTests {
 
         String jsonResponse = result.getResponse().getContentAsString();
         JsonNode jsonNode = new ObjectMapper().readTree(jsonResponse);
-        Long ingredientId = jsonNode.get("id").asLong();
-        System.out.println(ingredientId);
+        long ingredientId = jsonNode.get("id").asLong();
 
         mvc.perform(delete("/api/v1/ingredients/" + ingredientId)
                         .accept(MediaType.APPLICATION_JSON))
