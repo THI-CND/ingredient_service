@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class MessagingService {
 
     private static final Logger logger = LoggerFactory.getLogger(MessagingService.class);
+
     private final RabbitTemplate rabbitTemplate;
 
     @Value("${app.message.queue.ingredients.exchange}")
