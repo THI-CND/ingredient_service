@@ -1,6 +1,6 @@
 package de.thi.cnd.application;
 
-import de.thi.cnd.adapter.jpa.IngredientRepository;
+import de.thi.cnd.adapter.outgoing.jpa.IngredientRepository;
 import de.thi.cnd.domain.IngredientService;
 import de.thi.cnd.domain.model.Ingredient;
 import de.thi.cnd.ports.outgoing.IngredientEvents;
@@ -21,6 +21,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Autowired
     private IngredientEvents events;
+
     @Autowired
     private IngredientRepository ingredientRepository;
 
@@ -75,22 +76,18 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Optional<Ingredient> updateIngredient(Long ingredientId, String name, String unit, List<String> tags) {
-        if(ingredientRepository.existsById(ingredientId)) {
-            Ingredient updatedIngredient = new Ingredient();
-            updatedIngredient.setName(name);
-            updatedIngredient.setUnit(unit);
-            updatedIngredient.setTags(tags);
-
-            checkForNewTags(tags, getAllTags());
-
-            Ingredient savedIngredient = ingredients.saveIngredient(updatedIngredient);
-            events.ingredientUpdated(savedIngredient);
-
-            return Optional.of(savedIngredient);
+        Optional<Ingredient> ingredient = ingredients.getIngredientById(ingredientId);
+        if(ingredient.isEmpty()) {
+            return Optional.empty();
         }
-       return Optional.empty();
-    }
 
+        checkForNewTags(tags, getAllTags());
+
+        Optional<Ingredient> updatedIngredient = ingredients.updateIngredient(ingredientId, name, unit, tags);
+        events.ingredientUpdated(updatedIngredient.get());
+
+        return updatedIngredient;
+    }
 
     public Set<String> getAllTags() {
         return ingredients.getTags().stream()
