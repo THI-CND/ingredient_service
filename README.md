@@ -3,7 +3,7 @@ Der IngredientService verwaltet Zutaten für Rezepte.
 
 ## APIs
 ### REST
-#### GET /ingredients
+#### GET /api/v1/ingredients
 Gibt alle Zutaten zurück.
 
 **Response:**
@@ -20,7 +20,7 @@ Gibt alle Zutaten zurück.
     ]
     ```
 
-#### GET /ingredients/{id}
+#### GET /api/v1/ingredients/{id}
 Gibt die Zutat mit der ID {id} zurück.
 
 **Response:**
@@ -35,7 +35,7 @@ Gibt die Zutat mit der ID {id} zurück.
     ```
 - Status: `404 Not Found`
 
-#### POST /ingredients
+#### POST /api/v1/ingredients
 Erstellt eine neue Zutat.
 
 **Request Body:**
@@ -59,7 +59,7 @@ Erstellt eine neue Zutat.
     ```
 - Status: `400 Bad Request`: Name existiert bereits.
 
-#### PUT /ingredients/{id}
+#### PUT /api/v1/ingredients/{id}
 Aktualisiert die Zutat mit der ID {id}.
 
 **Request Body:**
@@ -84,7 +84,7 @@ Aktualisiert die Zutat mit der ID {id}.
     ```
 - Status: `404 Not Found`
 
-#### DELETE /ingredients/{id}
+#### DELETE /api/v1/ingredients/{id}
 Löscht die Zutat mit der ID {id}.
 
 **Response:**
