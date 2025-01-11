@@ -9,7 +9,7 @@ public interface IngredientService {
 
     Ingredient createIngredient(String name, String unit, List<String> tags);
 
-    List<Ingredient> getIngredients();
+    List<Ingredient> getIngredientsRepository();
 
     Optional<Ingredient> getIngredientById(Long ingredientId);
 

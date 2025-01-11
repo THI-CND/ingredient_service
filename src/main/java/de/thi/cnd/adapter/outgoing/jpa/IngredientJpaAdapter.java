@@ -3,19 +3,20 @@ package de.thi.cnd.adapter.outgoing.jpa;
 import de.thi.cnd.adapter.outgoing.jpa.entities.IngredientEntity;
 import de.thi.cnd.domain.model.Ingredient;
 import de.thi.cnd.ports.outgoing.IngredientOutputPort;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class IngredientJpaAdapter implements IngredientOutputPort {
 
-    @Autowired
-    IngredientRepository ingredientRepository;
+    private final IngredientRepository ingredientRepository;
+
+    public IngredientJpaAdapter(IngredientRepository ingredientRepository) {
+        this.ingredientRepository = ingredientRepository;
+    }
 
     @Override
     public Ingredient saveIngredient(Ingredient ingredient) {
@@ -92,7 +93,7 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
     private List<String> formatTags(List<String> tags) {
         return tags != null ? new ArrayList<>(tags.stream()
                 .map(String::toLowerCase)
-                .collect(Collectors.toList())) : new ArrayList<>();
+                .toList()) : new ArrayList<>();
     }
 
 
