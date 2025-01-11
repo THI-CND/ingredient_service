@@ -58,7 +58,7 @@ public class IngredientJpaAdapter implements IngredientOutputPort {
     public Optional<Ingredient> updateIngredient(Long ingredientId, String name, String unit, List<String> tags) {
         Optional<IngredientEntity> ingredientEntity = ingredientRepository.findById(ingredientId);
         if (ingredientEntity.isEmpty()) {
-            throw new IllegalArgumentException("Ingredient with id " + ingredientId + " not found");
+            return Optional.empty();
         }
         IngredientEntity i = ingredientEntity.get();
         i.setName(name);
