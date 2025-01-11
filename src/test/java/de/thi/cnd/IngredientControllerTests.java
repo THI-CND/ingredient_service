@@ -2,9 +2,9 @@ package de.thi.cnd;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.thi.cnd.adapter.api.rest.dto.CreateIngredientRequest;
-import de.thi.cnd.adapter.api.rest.dto.UpdateIngredientRequest;
-import de.thi.cnd.adapter.jpa.IngredientRepository;
+import de.thi.cnd.adapter.ingoing.rest.dto.CreateIngredientRequest;
+import de.thi.cnd.adapter.ingoing.rest.dto.UpdateIngredientRequest;
+import de.thi.cnd.adapter.outgoing.jpa.IngredientRepository;
 import de.thi.cnd.ports.outgoing.IngredientEvents;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class IngredientControllerTests {
+class IngredientControllerTests {
 
     private final MockMvc mvc;
     private final IngredientRepository ingredientRepository;
@@ -51,7 +51,7 @@ public class IngredientControllerTests {
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
         ingredient.setTags(List.of("süß"));
-        mvc.perform(post("/ingredients")
+        mvc.perform(post("/api/v1/ingredients")
                         .content(asJsonString(ingredient))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -65,14 +65,14 @@ public class IngredientControllerTests {
     void testCreateIngredientWithExistingName() throws Exception {
         CreateIngredientRequest ingredient = new CreateIngredientRequest();
         ingredient.setName("Zucker");
-        mvc.perform(post("/ingredients")
+        mvc.perform(post("/api/v1/ingredients")
                         .content(asJsonString(ingredient))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Zucker"));
 
-        mvc.perform(post("/ingredients")
+        mvc.perform(post("/api/v1/ingredients")
                         .content(asJsonString(ingredient))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -85,7 +85,7 @@ public class IngredientControllerTests {
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
         ingredient.setTags(List.of("süß"));
-        MvcResult result = mvc.perform(post("/ingredients")
+        MvcResult result = mvc.perform(post("/api/v1/ingredients")
                         .content(asJsonString(ingredient))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -97,7 +97,7 @@ public class IngredientControllerTests {
         Long ingredientId = jsonNode.get("id").asLong();
         System.out.println(ingredientId);
 
-        mvc.perform(get("/ingredients/" + ingredientId)
+        mvc.perform(get("/api/v1/ingredients/" + ingredientId)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Zucker"))
@@ -110,13 +110,13 @@ public class IngredientControllerTests {
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
         ingredient.setTags(List.of("süß"));
-        mvc.perform(post("/ingredients")
+        mvc.perform(post("/api/v1/ingredients")
                         .content(asJsonString(ingredient))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mvc.perform(get("/ingredients")
+        mvc.perform(get("/api/v1/ingredients")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Zucker"))
@@ -129,13 +129,13 @@ public class IngredientControllerTests {
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
         ingredient.setTags(List.of("süß"));
-        mvc.perform(post("/ingredients")
+        mvc.perform(post("/api/v1/ingredients")
                         .content(asJsonString(ingredient))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mvc.perform(get("/ingredients?tag=süß")
+        mvc.perform(get("/api/v1/ingredients?tag=süß")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Zucker"))
@@ -149,7 +149,7 @@ public class IngredientControllerTests {
         ingredient.setUnit("g");
         ingredient.setTags(List.of("süß"));
 
-        MvcResult result = mvc.perform(post("/ingredients")
+        MvcResult result = mvc.perform(post("/api/v1/ingredients")
                         .content(asJsonString(ingredient))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -164,13 +164,13 @@ public class IngredientControllerTests {
         updatedIngredient.setName("Salz");
         updatedIngredient.setUnit("g");
         updatedIngredient.setTags(List.of("salzig"));
-        mvc.perform(put("/ingredients/" + ingredientId)
+        mvc.perform(put("/api/v1/ingredients/" + ingredientId)
                         .content(asJsonString(updatedIngredient))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        mvc.perform(get("/ingredients")
+        mvc.perform(get("/api/v1/ingredients")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Salz"))
@@ -183,7 +183,7 @@ public class IngredientControllerTests {
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
         ingredient.setTags(List.of("süß"));
-        MvcResult result = mvc.perform(post("/ingredients")
+        MvcResult result = mvc.perform(post("/api/v1/ingredients")
                         .content(asJsonString(ingredient))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -195,11 +195,11 @@ public class IngredientControllerTests {
         Long ingredientId = jsonNode.get("id").asLong();
         System.out.println(ingredientId);
 
-        mvc.perform(delete("/ingredients/" + ingredientId)
+        mvc.perform(delete("/api/v1/ingredients/" + ingredientId)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
-        mvc.perform(get("/ingredients")
+        mvc.perform(get("/api/v1/ingredients")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty());
