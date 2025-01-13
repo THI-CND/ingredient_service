@@ -147,7 +147,7 @@ message TagsResponse {
 ```
 
 ## Events
-### ìngredient.created
+### ìngredients.created
 Wird gesendet, wenn eine neue Zutat erstellt wurde.
 
 **Payload:**
@@ -160,7 +160,7 @@ Wird gesendet, wenn eine neue Zutat erstellt wurde.
 }
 ```
 
-### ingredient.updated
+### ingredients.updated
 Wird gesendet, wenn eine Zutat aktualisiert wurde.
 
 **Payload:**
@@ -173,7 +173,7 @@ Wird gesendet, wenn eine Zutat aktualisiert wurde.
 }
 ```
 
-### ingredient.deleted
+### ingredients.deleted
 Wird gesendet, wenn eine Zutat gelöscht wurde.
 
 **Payload:**
@@ -186,7 +186,7 @@ Wird gesendet, wenn eine Zutat gelöscht wurde.
 }
 ```
 
-### ingredient.tags.created
+### ingredients.tags.created
 Wird gesendet, wenn ein neuer Tag erstellt wurde.
 
 **Payload:**
