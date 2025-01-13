@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.thi.cnd.adapter.ingoing.rest.dto.CreateIngredientRequest;
 import de.thi.cnd.adapter.ingoing.rest.dto.UpdateIngredientRequest;
-import de.thi.cnd.adapter.outgoing.jpa.IngredientRepository;
-import de.thi.cnd.ports.outgoing.IngredientEvents;
+import de.thi.cnd.adapter.outgoing.jpa.JpaIngredientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,13 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class IngredientControllerTests {
 
     private final MockMvc mvc;
-    private final IngredientRepository ingredientRepository;
+    private final JpaIngredientRepository ingredientRepository;
 
-    @MockBean
-    private IngredientEvents ingredientEvents;
-
-    @Autowired
-    public IngredientControllerTests(MockMvc mvc, IngredientRepository ingredientRepository) {
+    public IngredientControllerTests(MockMvc mvc, JpaIngredientRepository ingredientRepository) {
         this.mvc = mvc;
         this.ingredientRepository = ingredientRepository;
     }

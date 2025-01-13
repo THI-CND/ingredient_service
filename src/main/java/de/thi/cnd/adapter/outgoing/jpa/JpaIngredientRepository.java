@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface IngredientRepository extends CrudRepository<IngredientEntity, Long> {
+public interface JpaIngredientRepository extends CrudRepository<IngredientEntity, Long> {
+
+    List<IngredientEntity> findAll();
+
     Optional<IngredientEntity> findByName(String name);
 
     @Query("SELECT DISTINCT t FROM IngredientEntity i JOIN i.tags t")
@@ -17,4 +20,5 @@ public interface IngredientRepository extends CrudRepository<IngredientEntity, L
 
     @Query("SELECT i FROM IngredientEntity i JOIN i.tags t WHERE t = :tag")
     List<IngredientEntity> findByTag(String tag);
+
 }

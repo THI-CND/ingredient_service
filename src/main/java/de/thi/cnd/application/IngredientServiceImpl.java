@@ -3,7 +3,7 @@ package de.thi.cnd.application;
 import de.thi.cnd.domain.IngredientService;
 import de.thi.cnd.domain.model.Ingredient;
 import de.thi.cnd.ports.outgoing.IngredientEvents;
-import de.thi.cnd.ports.outgoing.IngredientOutputPort;
+import de.thi.cnd.ports.outgoing.IngredientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,10 +18,10 @@ public class IngredientServiceImpl implements IngredientService {
 
     private static final Logger logger = LoggerFactory.getLogger(IngredientServiceImpl.class);
 
-    private final IngredientOutputPort ingredientsRepository;
+    private final IngredientRepository ingredientsRepository;
     private final IngredientEvents ingredientEvents;
 
-    public IngredientServiceImpl(IngredientOutputPort ingredientsRepository, IngredientEvents ingredientEvents) {
+    public IngredientServiceImpl(IngredientRepository ingredientsRepository, IngredientEvents ingredientEvents) {
         this.ingredientsRepository = ingredientsRepository;
         this.ingredientEvents = ingredientEvents;
     }
