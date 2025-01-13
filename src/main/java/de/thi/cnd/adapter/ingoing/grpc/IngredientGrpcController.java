@@ -1,4 +1,4 @@
-package de.thi.cnd.adapter.api.grpc;
+package de.thi.cnd.adapter.ingoing.grpc;
 
 import de.thi.cnd.domain.IngredientService;
 import de.thi.cnd.domain.model.Ingredient;

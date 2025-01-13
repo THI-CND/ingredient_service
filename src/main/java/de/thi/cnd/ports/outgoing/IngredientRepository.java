@@ -5,7 +5,7 @@ import de.thi.cnd.domain.model.Ingredient;
 import java.util.List;
 import java.util.Optional;
 
-public interface IngredientOutputPort {
+public interface IngredientRepository {
 
     Ingredient saveIngredient(Ingredient ingredient);
 

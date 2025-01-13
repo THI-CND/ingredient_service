@@ -1,11 +1,10 @@
-package de.thi.cnd.adapter.api.rest;
+package de.thi.cnd.adapter.ingoing.rest;
 
-import de.thi.cnd.adapter.api.rest.dto.CreateIngredientRequest;
-import de.thi.cnd.adapter.api.rest.dto.IngredientResponse;
-import de.thi.cnd.adapter.api.rest.dto.UpdateIngredientRequest;
+import de.thi.cnd.adapter.ingoing.rest.dto.CreateIngredientRequest;
+import de.thi.cnd.adapter.ingoing.rest.dto.IngredientResponse;
+import de.thi.cnd.adapter.ingoing.rest.dto.UpdateIngredientRequest;
 import de.thi.cnd.domain.IngredientService;
 import de.thi.cnd.domain.model.Ingredient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,25 +15,28 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/ingredients")
+@RequestMapping("/api/v1/ingredients")
 public class IngredientController {
 
-    @Autowired
-    private IngredientService service;
+    private final IngredientService ingredientService;
+
+    public IngredientController(IngredientService ingredientService) {
+        this.ingredientService = ingredientService;
+    }
 
     @PostMapping
     public IngredientResponse createIngredient(@RequestBody CreateIngredientRequest request) {
-        if(service.getIngredientByName(request.getName()).isPresent()) {
+        if(ingredientService.getIngredientByName(request.getName()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingredient with name " + request.getName() + " already exists");
         }
-        Ingredient i = service.createIngredient(request.getName(), request.getUnit(), request.getTags());
+        Ingredient i = ingredientService.createIngredient(request.getName(), request.getUnit(), request.getTags());
         return new IngredientResponse(i.getId(), i.getName(), i.getUnit(), i.getTags());
     }
 
     @GetMapping
     public List<IngredientResponse> getIngredients(@RequestParam(value = "tag", required = false) String tag) {
         if (tag != null && !tag.isEmpty()) {
-            List<Ingredient> list = service.getIngredientsByTag(tag);
+            List<Ingredient> list = ingredientService.getIngredientsByTag(tag);
             List<IngredientResponse> ingredients = new ArrayList<>();
 
             for (Ingredient i : list) {
@@ -42,7 +44,7 @@ public class IngredientController {
             }
             return ingredients;
         } else {
-            List<Ingredient> list = service.getIngredients();
+            List<Ingredient> list = ingredientService.getIngredients();
             List<IngredientResponse> ingredients = new ArrayList<>();
 
             for (Ingredient i : list) {
@@ -54,7 +56,7 @@ public class IngredientController {
 
     @GetMapping("/{id}")
     public IngredientResponse getIngredientById(@PathVariable Long id) {
-        Optional<Ingredient> i = service.getIngredientById(id);
+        Optional<Ingredient> i = ingredientService.getIngredientById(id);
         if (i.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient not found");
         }
@@ -63,7 +65,7 @@ public class IngredientController {
 
     @PutMapping("/{id}")
     public IngredientResponse updateIngredient(@PathVariable Long id, @RequestBody UpdateIngredientRequest request) {
-        Optional<Ingredient> i = service.updateIngredient(id, request.getName(), request.getUnit(), request.getTags());
+        Optional<Ingredient> i = ingredientService.updateIngredient(id, request.getName(), request.getUnit(), request.getTags());
         if (i.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient not found");
         }
@@ -72,17 +74,17 @@ public class IngredientController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteIngredient(@PathVariable Long id) {
-        Optional<Ingredient> i = service.getIngredientById(id);
+        Optional<Ingredient> i = ingredientService.getIngredientById(id);
         if (i.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient not found");
         }
-        service.deleteIngredient(id);
+        ingredientService.deleteIngredient(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/tags")
     public List<String> getTags() {
-        return service.getTags();
+        return ingredientService.getTags();
     }
 
 }

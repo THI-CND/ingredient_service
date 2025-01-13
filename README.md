@@ -1,9 +1,47 @@
 # IngredientService
 Der IngredientService verwaltet Zutaten für Rezepte.
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=THI-CND_ingredient_service&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=THI-CND_ingredient_service)
+
+---
+
+## Getting Started
+### Dependencies
+Das Projekt benötigt die folgenden Abhängigkeiten, um lokal gestartet zu werden:
+- Java 17 JDK
+- Maven 3+
+- Docker
+- Docker Compose
+
+### Start
+- Projekt bauen:
+    ```bash
+    mvn clean install
+    ```
+- Projekt starten:
+    ```bash
+    java -jar target/ingredientservice-<version>.jar
+    ```
+
+### Testing
+Die Tests werden mit dem Profil `test` ausgeführt.\
+Es wird eine lokale H2-Datenbank gestartet, die für die Tests verwendet wird.
+
+### Environment Variables
+- `DB_URL`: JDBC-URL der Datenbank
+- `DB_USER`: Benutzername für die Datenbank
+- `DB_PASSWORD`: Passwort für die Datenbank
+- `RABBIT_HOST`: Hostname des RabbitMQ Brokers
+- `RABBIT_PORT`: Port des RabbitMQ Brokers
+- `RABBIT_USER`: Benutzername für RabbitMQ
+- `RABBIT_PASSWORD`: Passwort für RabbitMQ
+- `RABBIT_EXCHANGE`: Exchange Name für Veröffentlichung der Events in RabbitMQ
+
+---
+
 ## APIs
 ### REST
-#### GET /ingredients
+#### GET /api/v1/ingredients
 Gibt alle Zutaten zurück.
 
 **Response:**
@@ -20,7 +58,7 @@ Gibt alle Zutaten zurück.
     ]
     ```
 
-#### GET /ingredients/{id}
+#### GET /api/v1/ingredients/{id}
 Gibt die Zutat mit der ID {id} zurück.
 
 **Response:**
@@ -35,7 +73,7 @@ Gibt die Zutat mit der ID {id} zurück.
     ```
 - Status: `404 Not Found`
 
-#### POST /ingredients
+#### POST /api/v1/ingredients
 Erstellt eine neue Zutat.
 
 **Request Body:**
@@ -59,7 +97,7 @@ Erstellt eine neue Zutat.
     ```
 - Status: `400 Bad Request`: Name existiert bereits.
 
-#### PUT /ingredients/{id}
+#### PUT /api/v1/ingredients/{id}
 Aktualisiert die Zutat mit der ID {id}.
 
 **Request Body:**
@@ -84,7 +122,7 @@ Aktualisiert die Zutat mit der ID {id}.
     ```
 - Status: `404 Not Found`
 
-#### DELETE /ingredients/{id}
+#### DELETE /api/v1/ingredients/{id}
 Löscht die Zutat mit der ID {id}.
 
 **Response:**
@@ -146,8 +184,10 @@ message TagsResponse {
 }
 ```
 
+---
+
 ## Events
-### ìngredient.created
+### ìngredients.created
 Wird gesendet, wenn eine neue Zutat erstellt wurde.
 
 **Payload:**
@@ -160,7 +200,7 @@ Wird gesendet, wenn eine neue Zutat erstellt wurde.
 }
 ```
 
-### ingredient.updated
+### ingredients.updated
 Wird gesendet, wenn eine Zutat aktualisiert wurde.
 
 **Payload:**
@@ -173,7 +213,7 @@ Wird gesendet, wenn eine Zutat aktualisiert wurde.
 }
 ```
 
-### ingredient.deleted
+### ingredients.deleted
 Wird gesendet, wenn eine Zutat gelöscht wurde.
 
 **Payload:**
@@ -186,7 +226,7 @@ Wird gesendet, wenn eine Zutat gelöscht wurde.
 }
 ```
 
-### ingredient.tags.created
+### ingredients.tags.created
 Wird gesendet, wenn ein neuer Tag erstellt wurde.
 
 **Payload:**

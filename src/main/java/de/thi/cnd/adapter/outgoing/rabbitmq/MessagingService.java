@@ -1,20 +1,22 @@
-package de.thi.cnd.adapter.rabbitmq;
+package de.thi.cnd.adapter.outgoing.rabbitmq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MessagingService {
 
+    private static final Logger logger = LoggerFactory.getLogger(MessagingService.class);
+
     private final RabbitTemplate rabbitTemplate;
 
     @Value("${app.message.queue.ingredients.exchange}")
     private String topicExchangeName;
 
-    @Autowired
     public MessagingService(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
@@ -24,7 +26,7 @@ public class MessagingService {
         try {
             rabbitTemplate.convertAndSend(topicExchangeName, routingKey, content);
         } catch (Exception e) {
-            System.out.println("Could not send RabbitMQ message: " + e.getMessage());
+            logger.error("Error publishing message", e);
         }
     }
 
