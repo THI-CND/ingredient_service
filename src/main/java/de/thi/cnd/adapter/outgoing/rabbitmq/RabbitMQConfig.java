@@ -7,6 +7,7 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 
 @Configuration
@@ -31,16 +32,18 @@ public class RabbitMQConfig {
     private String routingKeyTag;
 
     @Bean
-    Queue queue() {
-        return new Queue(queueName, false);
-    }
-
-    @Bean
-    TopicExchange exchange() {
+    public TopicExchange exchange() {
         return new TopicExchange(topicExchangeName);
     }
 
     @Bean
+    @Profile("dev")
+    public Queue queue() {
+        return new Queue(queueName, false);
+    }
+
+    @Bean
+    @Profile("dev")
     public Declarables bindings() {
         return new Declarables(
                 BindingBuilder.bind(queue()).to(exchange()).with(routingKeyCreated),

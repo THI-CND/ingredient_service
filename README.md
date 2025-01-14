@@ -14,18 +14,32 @@ Das Projekt benötigt die folgenden Abhängigkeiten, um lokal gestartet zu werde
 - Docker Compose
 
 ### Start
-- Projekt bauen:
+- Projekt lokal bauen:
     ```bash
     mvn clean install
     ```
-- Projekt starten:
+- Gebautes Projekt lokal starten:
     ```bash
     java -jar target/ingredientservice-<version>.jar
     ```
+#### Docker
+Das Projekt kann auch lokal per Docker gestartet werden.\
+Dazu muss im Projektordner der folgende Befehl ausgeführt werden:
+```bash
+docker compose up
+```
+Neben dem Service wird eine Postgres Datenbank und eine RabbitMQ Message Queue gestartet.
+Erreichbar ist der Service anschließend unter Port 8080 (REST) und 9090 (gRPC).
 
-### Testing
-Die Tests werden mit dem Profil `test` ausgeführt.\
+### Profile
+#### Dev
+Im `dev`-Profil wird die Datenbank bei jedem Start geleert.
+
+#### Test
+Das `test`-Profil wird zum Ausführen der Tests verwendet.\
 Es wird eine lokale H2-Datenbank gestartet, die für die Tests verwendet wird.
+
+---
 
 ### Environment Variables
 - `DB_URL`: JDBC-URL der Datenbank

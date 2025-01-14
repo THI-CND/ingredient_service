@@ -18,20 +18,21 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-#  ingredientservice:
-#    image: ghcr.io/thi-cnd/ingredient_service:latest
-#    platform: linux/amd64
-#    restart: unless-stopped
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      DB_URL: jdbc:postgresql://postgres:5432/ingredient
-#      DB_USER: postgres
-#      DB_PASSWORD: password
-#      RABBIT_HOST: rabbitmq
-#      RABBIT_PORT: 5672
-#      RABBIT_USER: guest
-#      RABBIT_PASSWORD: guest
-#    depends_on:
-#      - postgres
-#      - rabbitmq
+  ingredientservice:
+    image: ghcr.io/thi-cnd/ingredient_service:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/ingredient
+      DB_USER: postgres
+      DB_PASSWORD: password
+      RABBIT_HOST: rabbitmq
+      RABBIT_PORT: 5672
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
+      RABBIT_EXCHANGE: recipemanagement
+    depends_on:
+      - postgres
+      - rabbitmq
