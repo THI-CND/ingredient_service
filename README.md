@@ -1,5 +1,5 @@
 # IngredientService
-Der IngredientService verwaltet Zutaten für Rezepte.
+Der IngredientService ist eine Spring Boot Anwendung, die Zutaten für Rezepte verwaltet.
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=THI-CND_ingredient_service&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=THI-CND_ingredient_service)
 
