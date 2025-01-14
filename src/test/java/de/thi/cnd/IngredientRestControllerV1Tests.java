@@ -2,8 +2,8 @@ package de.thi.cnd;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.thi.cnd.adapter.ingoing.rest.dto.CreateIngredientRequest;
-import de.thi.cnd.adapter.ingoing.rest.dto.UpdateIngredientRequest;
+import de.thi.cnd.adapter.ingoing.rest.dto.CreateIngredientRequestDTO;
+import de.thi.cnd.adapter.ingoing.rest.dto.UpdateIngredientRequestDTO;
 import de.thi.cnd.adapter.outgoing.jpa.JpaIngredientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,13 +24,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class IngredientControllerTests {
+class IngredientRestControllerV1Tests {
 
     private final MockMvc mvc;
     private final JpaIngredientRepository ingredientRepository;
 
     @Autowired
-    public IngredientControllerTests(MockMvc mvc, JpaIngredientRepository ingredientRepository) {
+    public IngredientRestControllerV1Tests(MockMvc mvc, JpaIngredientRepository ingredientRepository) {
         this.mvc = mvc;
         this.ingredientRepository = ingredientRepository;
     }
@@ -42,7 +42,7 @@ class IngredientControllerTests {
 
     @Test
     void testCreateIngredient() throws Exception {
-        CreateIngredientRequest ingredient = new CreateIngredientRequest();
+        CreateIngredientRequestDTO ingredient = new CreateIngredientRequestDTO();
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
         ingredient.setTags(List.of("süß"));
@@ -58,7 +58,7 @@ class IngredientControllerTests {
 
     @Test
     void testCreateIngredientWithExistingName() throws Exception {
-        CreateIngredientRequest ingredient = new CreateIngredientRequest();
+        CreateIngredientRequestDTO ingredient = new CreateIngredientRequestDTO();
         ingredient.setName("Zucker");
         mvc.perform(post("/api/v1/ingredients")
                         .content(asJsonString(ingredient))
@@ -76,7 +76,7 @@ class IngredientControllerTests {
 
     @Test
     void testReadIngredientById() throws Exception {
-        CreateIngredientRequest ingredient = new CreateIngredientRequest();
+        CreateIngredientRequestDTO ingredient = new CreateIngredientRequestDTO();
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
         ingredient.setTags(List.of("süß"));
@@ -100,7 +100,7 @@ class IngredientControllerTests {
 
     @Test
     void testReadIngredients() throws Exception {
-        CreateIngredientRequest ingredient = new CreateIngredientRequest();
+        CreateIngredientRequestDTO ingredient = new CreateIngredientRequestDTO();
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
         ingredient.setTags(List.of("süß"));
@@ -119,7 +119,7 @@ class IngredientControllerTests {
 
     @Test
     void testReadIngredientsByTag() throws Exception {
-        CreateIngredientRequest ingredient = new CreateIngredientRequest();
+        CreateIngredientRequestDTO ingredient = new CreateIngredientRequestDTO();
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
         ingredient.setTags(List.of("süß"));
@@ -138,7 +138,7 @@ class IngredientControllerTests {
 
     @Test
     void testUpdateIngredient() throws Exception {
-        CreateIngredientRequest ingredient = new CreateIngredientRequest();
+        CreateIngredientRequestDTO ingredient = new CreateIngredientRequestDTO();
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
         ingredient.setTags(List.of("süß"));
@@ -154,7 +154,7 @@ class IngredientControllerTests {
         JsonNode jsonNode = new ObjectMapper().readTree(jsonResponse);
         long ingredientId = jsonNode.get("id").asLong();
 
-        UpdateIngredientRequest updatedIngredient = new UpdateIngredientRequest();
+        UpdateIngredientRequestDTO updatedIngredient = new UpdateIngredientRequestDTO();
         updatedIngredient.setName("Salz");
         updatedIngredient.setUnit("g");
         updatedIngredient.setTags(List.of("salzig"));
@@ -173,7 +173,7 @@ class IngredientControllerTests {
 
     @Test
     void testDeleteIngredient() throws Exception {
-        CreateIngredientRequest ingredient = new CreateIngredientRequest();
+        CreateIngredientRequestDTO ingredient = new CreateIngredientRequestDTO();
         ingredient.setName("Zucker");
         ingredient.setUnit("g");
         ingredient.setTags(List.of("süß"));

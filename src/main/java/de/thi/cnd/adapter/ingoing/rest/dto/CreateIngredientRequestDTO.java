@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class UpdateIngredientRequest {
+public class CreateIngredientRequestDTO {
 
     private String name;
     private String unit;
