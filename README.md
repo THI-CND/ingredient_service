@@ -5,6 +5,12 @@ Der IngredientService ist eine Spring Boot Anwendung, die Zutaten für Rezepte v
 
 ---
 
+## Architektur
+
+![ingredientservice-architecture.png](docs/ingredientservice-architecture.png)
+
+---
+
 ## Getting Started
 ### Dependencies
 Das Projekt benötigt die folgenden Abhängigkeiten, um lokal gestartet zu werden:
@@ -18,7 +24,7 @@ Das Projekt benötigt die folgenden Abhängigkeiten, um lokal gestartet zu werde
     ```bash
     mvn clean install
     ```
-- Gebautes Projekt lokal starten:
+- Gebautes Projekt lokal starten (Environment Variablen (s. u.) müssen gesetzt sein):
     ```bash
     java -jar target/ingredientservice-<version>.jar
     ```

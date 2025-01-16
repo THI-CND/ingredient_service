@@ -1,10 +1,10 @@
 package de.thi.cnd.adapter.outgoing.rabbitmq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.thi.cnd.adapter.outgoing.rabbitmq.dto.IngredientCreatedEvent;
-import de.thi.cnd.adapter.outgoing.rabbitmq.dto.IngredientDeletedEvent;
-import de.thi.cnd.adapter.outgoing.rabbitmq.dto.IngredientUpdatedEvent;
-import de.thi.cnd.adapter.outgoing.rabbitmq.dto.TagCreatedEvent;
+import de.thi.cnd.adapter.outgoing.rabbitmq.dto.IngredientCreatedEventDTO;
+import de.thi.cnd.adapter.outgoing.rabbitmq.dto.IngredientDeletedEventDTO;
+import de.thi.cnd.adapter.outgoing.rabbitmq.dto.IngredientUpdatedEventDTO;
+import de.thi.cnd.adapter.outgoing.rabbitmq.dto.TagCreatedEventDTO;
 import de.thi.cnd.domain.model.Ingredient;
 import de.thi.cnd.ports.outgoing.IngredientEvents;
 import org.slf4j.Logger;
@@ -43,26 +43,26 @@ public class IngredientEventsImpl implements IngredientEvents {
 
     @Override
     public void ingredientCreated(Ingredient ingredient) {
-        IngredientCreatedEvent ingredientCreatedEvent = new IngredientCreatedEvent(ingredient.getId(), ingredient.getName(), ingredient.getUnit(), ingredient.getTags());
-        publishEvent(ingredientCreatedEvent, routingKeyCreated);
+        IngredientCreatedEventDTO ingredientCreatedEventDTO = new IngredientCreatedEventDTO(ingredient.getId(), ingredient.getName(), ingredient.getUnit(), ingredient.getTags());
+        publishEvent(ingredientCreatedEventDTO, routingKeyCreated);
     }
 
     @Override
     public void ingredientUpdated(Ingredient ingredient) {
-        IngredientUpdatedEvent ingredientUpdatedEvent = new IngredientUpdatedEvent(ingredient.getId(), ingredient.getName(), ingredient.getUnit(), ingredient.getTags());
-        publishEvent(ingredientUpdatedEvent, routingKeyUpdated);
+        IngredientUpdatedEventDTO ingredientUpdatedEventDTO = new IngredientUpdatedEventDTO(ingredient.getId(), ingredient.getName(), ingredient.getUnit(), ingredient.getTags());
+        publishEvent(ingredientUpdatedEventDTO, routingKeyUpdated);
     }
 
     @Override
     public void ingredientDeleted(Ingredient ingredient) {
-        IngredientDeletedEvent ingredientDeletedEvent = new IngredientDeletedEvent(ingredient.getId(), ingredient.getName(), ingredient.getUnit(), ingredient.getTags());
-        publishEvent(ingredientDeletedEvent, routingKeyDeleted);
+        IngredientDeletedEventDTO ingredientDeletedEventDTO = new IngredientDeletedEventDTO(ingredient.getId(), ingredient.getName(), ingredient.getUnit(), ingredient.getTags());
+        publishEvent(ingredientDeletedEventDTO, routingKeyDeleted);
     }
 
     @Override
     public void tagCreated(String name) {
-        TagCreatedEvent tagCreatedEvent = new TagCreatedEvent(name);
-        publishEvent(tagCreatedEvent, routingKeyTag);
+        TagCreatedEventDTO tagCreatedEventDTO = new TagCreatedEventDTO(name);
+        publishEvent(tagCreatedEventDTO, routingKeyTag);
     }
 
     private void publishEvent(Object event, String routingKey) {
