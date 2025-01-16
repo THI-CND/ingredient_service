@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class IngredientUpdatedEvent {
+public class IngredientCreatedEventDTO {
 
     private Long id;
     private String name;
